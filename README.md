@@ -17,7 +17,6 @@ Create a React app that displays restaurant orders. Each order should show:
 - The order number (like "Order #101")
 - What type it is (eating in, takeout, or delivery)
 - How long ago it came in (like "5 mins ago")
-- What stage it's at (new, being cooked, or ready)
 
 ### Part 2: Display the Food Items
 For each order, show:
