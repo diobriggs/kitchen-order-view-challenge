@@ -29,7 +29,6 @@ app.get('/api/orders', (req, res) => {
       res.status(500).json({ error: 'Failed to fetch orders' });
       return;
     }
-    // For each order, get its items
     let pending = orders.length;
     if (pending === 0) return res.json([]);
     const fullOrders = [];
@@ -51,6 +50,25 @@ app.get('/api/orders', (req, res) => {
           res.json(fullOrders);
         }
       });
+    });
+  });
+});
+
+app.post('/api/orders/remove', (req, res) => {
+  const { id } = req.body;
+  if (!id) {
+    return res.status(400).json({ error: 'Order id is required' });
+  }
+  db.run(`DELETE FROM orders WHERE id = ?`, [id], function(err) {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to remove order' });
+    }
+    // Also remove associated order_items
+    db.run(`DELETE FROM order_items WHERE orderId = ?`, [id], function(err2) {
+      if (err2) {
+        return res.status(500).json({ error: 'Failed to remove order items' });
+      }
+      res.json({ success: true, removedOrderId: id });
     });
   });
 });
