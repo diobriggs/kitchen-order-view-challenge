@@ -1,0 +1,61 @@
+/* App.css */
+body, html {
+  min-height: 100vh;
+  background: #f3f4f6;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+
+.readyOrder {
+  font-size: 1.5rem;
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+.kitchen-container {
+  min-height: 100vh;
+  background: #f3f4f6;
+  padding: 1rem;
+}
+.allergy {
+  color: red;
+
+}
+.kitchen-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.order-list {
+  list-style: none;
+  padding: 0;
+}
+
+.order-card {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.order-status {
+  font-weight: bold;
+}
+
+.order-items {
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+}
+
+.text-red {
+  color: #dc2626;
+  font-weight: bold;
+}
