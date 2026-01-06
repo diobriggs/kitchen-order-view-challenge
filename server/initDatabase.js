@@ -77,7 +77,7 @@ db.serialize(() => {
           order.id,
           order.orderNumber,
           order.orderType,
-          'preparing', // All orders start as preparing for Phase 2
+          order.status,
           order.customerName || null,
           order.tableNumber || null,
           order.createdAt
