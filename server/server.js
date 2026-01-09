@@ -27,6 +27,74 @@ const db = new sqlite3.Database('./kitchen.db', (err) => {
 //   // Your code here
 // });
 
+const dbAll = (sql, params = []) =>
+  new Promise((resolve, reject) => {
+    db.all(sql, params, (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows);
+    });
+  });
+
+
+  app.get("/api/orders", async (req, res) => {
+    try {
+      const rows = await dbAll("SELECT * FROM orders;", []);
+  
+      // (Optional) sequential is safest with sqlite3
+      for (const o of rows) {
+        const items = await dbAll(
+          "SELECT name, quantity, modifiers FROM order_items WHERE orderId = ?",
+          [o.id]
+        );
+  
+        o.items = items.map((i) => ({
+          ...i,
+          modifiers: i.modifiers ? JSON.parse(i.modifiers) : [],
+        }));
+      }
+  
+      res.status(200).json({ orders: rows });
+    } catch (err) {
+      res.status(500).json({ error: err?.message ?? String(err) });
+    }
+  });
+  
+  const dbRun = (sql, params = []) =>
+  new Promise((resolve, reject) => {
+    db.run(sql, params, function (err) {
+      if (err) reject(err);
+      else resolve({ changes: this.changes, lastID: this.lastID });
+    });
+  });
+
+  app.put("/api/orders/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+  
+      const idNum = Number(id);
+      if (!Number.isInteger(idNum) || idNum <= 0) {
+        return res.status(400).json({ error: "Order id is required" });
+      }
+      if (!status) {
+        return res.status(400).json({ error: "status is required" });
+      }
+  
+      const result = await dbRun(
+        "UPDATE orders SET status = ? WHERE id = ?",
+        [status, idNum]
+      );
+  
+      if (result.changes === 0) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+  
+      res.status(200).json({ message: "Order status updated successfully" });
+    } catch (err) {
+      res.status(500).json({ error: err?.message ?? String(err) });
+    }
+  });
+  
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
